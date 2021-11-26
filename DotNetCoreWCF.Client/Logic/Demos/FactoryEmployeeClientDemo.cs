@@ -27,6 +27,7 @@ namespace DotNetCoreWCF.Client
 				using (var client = _clientFactory.GetClient(ClientType.ChannelFactory))
 				{
 					response = client.Get(new Contracts.Model.Employees.EmployeeRequest { ActiveOnly = true });
+		
 				}
 
 				_logger.LogInformation($"Employees found: {response?.Employees.Length}");

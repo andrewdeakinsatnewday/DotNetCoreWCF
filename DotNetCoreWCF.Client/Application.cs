@@ -19,13 +19,13 @@ namespace DotNetCoreWCF.Client
 		{
 			_logger.LogInformation("I'm running yo!");
 
-			RunDemo1();
+			//RunDemo1();
 
 			RunDemo2();
 
-			RunDemo3();
+			//RunDemo3();
 
-			RunDemo4();
+			//RunDemo4();
 		}
 
 		private void RunDemo1()

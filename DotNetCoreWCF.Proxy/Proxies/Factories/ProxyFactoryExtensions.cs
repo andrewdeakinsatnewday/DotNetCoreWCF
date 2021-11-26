@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using DotNetCoreWCF.Contracts.Model.Configuration;
@@ -169,7 +170,90 @@ namespace DotNetCoreWCF.Proxies.Factories
 				binding.MaxReceivedMessageSize = settings.MaxReceivedMessageSize.Value;
 
 			//if (settings.SecurityMode.HasValue)
-			//	binding.Security = new System.ServiceModel.NetTcpSecurity { Mode = settings.SecurityMode.Value };
+			//binding.Security = new NetTcpSecurity { Mode = SecurityMode.Message };
+			binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.Certificate;
+
+			
+
+			//if (factory.Credentials != null)
+			//{
+			//	factory.Credentials.ServiceCertificate.SetDefaultCertificate(
+			//		StoreLocation.LocalMachine, StoreName.My,
+			//		X509FindType.FindBySubjectName, "localhost:9118");
+			//}
+			//binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Certificate;
+			//binding.Security.Transport.ProxyCredentialType = HttpProxyCredentialType.None;
+
+
+
+			if (settings.TransferMode.HasValue)
+				binding.TransferMode = settings.TransferMode.Value;
+
+			// reader quotas settings
+			if (settings.MaxArrayLength.HasValue)
+				binding.ReaderQuotas.MaxArrayLength = settings.MaxArrayLength.Value;
+
+			if (settings.MaxBytesPerRead.HasValue)
+				binding.ReaderQuotas.MaxBytesPerRead = settings.MaxBytesPerRead.Value;
+
+			if (settings.MaxDepth.HasValue)
+				binding.ReaderQuotas.MaxDepth = settings.MaxDepth.Value;
+
+			if (settings.MaxNameTableCharCount.HasValue)
+				binding.ReaderQuotas.MaxNameTableCharCount = settings.MaxNameTableCharCount.Value;
+
+			if (settings.MaxStringContentLength.HasValue)
+				binding.ReaderQuotas.MaxStringContentLength = settings.MaxStringContentLength.Value;
+
+			return binding;
+		}
+
+		public static System.ServiceModel.Channels.Binding GetBasicHttpBinding(this IClientProxySettings settings) //INetTcpClientProxySettings settings)
+		{
+			if (!settings.Enabled)
+				return null;
+
+			var binding = Enum.TryParse(settings.SecurityMode, true, out SecurityMode securityMode)
+				? new BasicHttpBinding(BasicHttpSecurityMode.None)
+				: new BasicHttpBinding();
+
+			if (settings.CloseTimeout.HasValue)
+				binding.CloseTimeout = settings.CloseTimeout.Value;
+
+			if (settings.OpenTimeout.HasValue)
+				binding.OpenTimeout = settings.OpenTimeout.Value;
+
+			if (settings.ReceiveTimeout.HasValue)
+				binding.ReceiveTimeout = settings.ReceiveTimeout.Value;
+
+			if (settings.SendTimeout.HasValue)
+				binding.SendTimeout = settings.SendTimeout.Value;
+
+			if (settings.MaxBufferPoolSize.HasValue)
+				binding.MaxBufferPoolSize = settings.MaxBufferPoolSize.Value;
+
+			if (settings.MaxBufferSize.HasValue)
+				binding.MaxBufferSize = settings.MaxBufferSize.Value;
+
+			if (settings.MaxReceivedMessageSize.HasValue)
+				binding.MaxReceivedMessageSize = settings.MaxReceivedMessageSize.Value;
+
+			//if (settings.SecurityMode.HasValue)
+			//binding.Security = new NetTcpSecurity { Mode = SecurityMode.Message };
+			binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Certificate;
+
+
+
+			//if (factory.Credentials != null)
+			//{
+			//	factory.Credentials.ServiceCertificate.SetDefaultCertificate(
+			//		StoreLocation.LocalMachine, StoreName.My,
+			//		X509FindType.FindBySubjectName, "localhost:9118");
+			//}
+			//binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Certificate;
+			//binding.Security.Transport.ProxyCredentialType = HttpProxyCredentialType.None;
+
+
 
 			if (settings.TransferMode.HasValue)
 				binding.TransferMode = settings.TransferMode.Value;
